@@ -268,12 +268,13 @@ pre#out {
       <div class="head" id="duressHead"><input type="checkbox" id="duressOn"> <span>Add duress mode (optional)</span></div>
       <div class="body" id="duressBody" hidden>
         <p class="sub">If forced to unlock, hand over this second password to reveal the decoy instead of the real secret. To be believable, make the decoy a real low-value wallet — not an empty one.</p>
-        <label>Decoy phrase / text</label>
+        <div class="row-label"><label>Decoy phrase / text</label><button type="button" class="btn btn-ghost" id="genDecoy">🎲 generate fake</button></div>
         <textarea id="decoy" placeholder="recovery phrase of a real, low-value wallet" autocomplete="off" spellcheck="false"></textarea>
         <label>Duress password (must differ from main)</label>
         <input type="password" id="dpw1" class="pwd" autocomplete="new-password">
         <label>Repeat duress password</label>
         <input type="password" id="dpw2" class="pwd" autocomplete="new-password">
+        <div id="decoyNote" class="status"></div>
       </div>
     </div>
 
@@ -11266,6 +11267,19 @@ CP.initEncryptor = function () {
     var cb = document.getElementById('disguiseOn');
     if (e.target.id !== 'disguiseOn') cb.checked = !cb.checked;
     document.getElementById('disguiseBody').hidden = !cb.checked;
+  });
+
+  // Auto-generate a fake decoy: a random VALID BIP39 phrase + a duress password.
+  document.getElementById('genDecoy').addEventListener('click', async function () {
+    var phrase = await CP.phraseFromEntropy(crypto.getRandomValues(new Uint8Array(16)), CP.BIP39);
+    var dp = CP.generatePassphrase();
+    document.getElementById('decoy').value = phrase;
+    document.getElementById('dpw1').value = dp;
+    document.getElementById('dpw2').value = dp;
+    var note = document.getElementById('decoyNote');
+    note.className = 'status ok';
+    note.innerHTML = 'Decoy password (write it down): <code>' + dp + '</code><br>' +
+      'You may replace it with something easier to remember — the decoy is worthless, so its password need not be strong. Note: a generated decoy is an <b>empty</b> wallet; a funded real wallet is more convincing under real coercion.';
   });
 
   document.getElementById('genPw').addEventListener('click', function () {

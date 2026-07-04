@@ -31,6 +31,19 @@ CP.initEncryptor = function () {
     document.getElementById('disguiseBody').hidden = !cb.checked;
   });
 
+  // Auto-generate a fake decoy: a random VALID BIP39 phrase + a duress password.
+  document.getElementById('genDecoy').addEventListener('click', async function () {
+    var phrase = await CP.phraseFromEntropy(crypto.getRandomValues(new Uint8Array(16)), CP.BIP39);
+    var dp = CP.generatePassphrase();
+    document.getElementById('decoy').value = phrase;
+    document.getElementById('dpw1').value = dp;
+    document.getElementById('dpw2').value = dp;
+    var note = document.getElementById('decoyNote');
+    note.className = 'status ok';
+    note.innerHTML = 'Decoy password (write it down): <code>' + dp + '</code><br>' +
+      'You may replace it with something easier to remember — the decoy is worthless, so its password need not be strong. Note: a generated decoy is an <b>empty</b> wallet; a funded real wallet is more convincing under real coercion.';
+  });
+
   document.getElementById('genPw').addEventListener('click', function () {
     var phrase = CP.generatePassphrase();
     document.getElementById('pw1').value = phrase;

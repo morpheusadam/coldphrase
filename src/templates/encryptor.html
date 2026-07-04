@@ -52,12 +52,13 @@
       <div class="head" id="duressHead"><input type="checkbox" id="duressOn"> <span>Add duress mode (optional)</span></div>
       <div class="body" id="duressBody" hidden>
         <p class="sub">If forced to unlock, hand over this second password to reveal the decoy instead of the real secret. To be believable, make the decoy a real low-value wallet — not an empty one.</p>
-        <label>Decoy phrase / text</label>
+        <div class="row-label"><label>Decoy phrase / text</label><button type="button" class="btn btn-ghost" id="genDecoy">🎲 generate fake</button></div>
         <textarea id="decoy" placeholder="recovery phrase of a real, low-value wallet" autocomplete="off" spellcheck="false"></textarea>
         <label>Duress password (must differ from main)</label>
         <input type="password" id="dpw1" class="pwd" autocomplete="new-password">
         <label>Repeat duress password</label>
         <input type="password" id="dpw2" class="pwd" autocomplete="new-password">
+        <div id="decoyNote" class="status"></div>
       </div>
     </div>
 

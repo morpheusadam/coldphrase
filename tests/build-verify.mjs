@@ -80,6 +80,7 @@ const feat = {
   'trigger detector in viewer': vCode.includes('triggerMatches') && vCode.includes('_revealed'),
   'trigger stored as hash only (builder)': encCode.includes('triggerHashHex') && encCode.includes("getElementById('trigger')"),
   'snake-game download filename': encCode.includes("'snake-game.html'"),
+  'decoy auto-generator': encCode.includes('genDecoy') && encCode.includes('phraseFromEntropy') && html.includes('id="decoy"'),
 };
 for (const [k, v] of Object.entries(feat)) { ok(v, 'feature: ' + k); }
 
