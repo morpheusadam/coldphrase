@@ -26,7 +26,8 @@ viewer. Build with `node build/build.mjs`; test with `npm test`.
 | `src/styles/app.css` | — | components; **colors only via `var(--…)`** | styling |
 | `design/design-tokens.json` | — | the palette/typography source of truth | design system |
 | `build/tokens-to-css.mjs` | build | tokens → CSS variables | token mapping |
-| `build/build.mjs` | build | bundle everything → `dist/` | build pipeline |
+| `build/build.mjs` | build | bundle everything → single-file `dist/coldphrase.html` | build pipeline |
+| `build/build-web.mjs` | build | emit thin multi-file builder → `web/` (external css/data/js) | build pipeline |
 | `vendor/**` | — | pinned third-party assets (never edit; re-vendor + update hashes) | dependency bumps |
 | `tests/**` | CI/dev | crypto, build, e2e suites | always update with code |
 
@@ -42,6 +43,11 @@ viewer. Build with `node build/build.mjs`; test with `npm test`.
    updating both test suites.
 6. **Two CSPs are intentional** (viewer strict `default-src 'none'`; builder enumerated to keep
    the Blob download working). See `docs/SECURITY-MODEL.md`.
+7. **Data comes from a global with a DOM fallback.** Modules read the library and wordlists via
+   `window.CP_LIB` / `window.CP_BIP39` / `window.CP_EFF` (set by `web/data/*.js` in the
+   multi-file build), falling back to inline `<script id="…" type="text/plain">` elements in
+   the single-file build. Keep both paths working. Two build targets — `build.mjs` (single
+   file) and `build-web.mjs` (multi-file `web/`) — share the same `src/`.
 
 ## Common tasks
 

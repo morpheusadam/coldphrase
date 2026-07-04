@@ -114,11 +114,22 @@ unlock screen. All screens are theme-aware (dark shown).
 3. **Go offline** and open the file. Enter your phrase, click *generate strong* for a password, and *Encrypt & download*.
 4. You get `wallet-secret.html` plus its own whole-file SHA-256. **Test it with every password**, record the hash off-machine, then delete the original phrase.
 
+### Two ways to run the builder
+
+| | Open | Best for |
+|---|---|---|
+| **Single-file** | `dist/coldphrase.html` | Portability — one file, copy it anywhere, works by double-click. |
+| **Multi-file** | `web/index.html` | Readability — a thin page that imports `app.css`, `data/*.js`, and one small `js/*.js` per module. Easy to inspect and edit. |
+
+Both are byte-for-byte the same behaviour and both run fully offline over `file://` (classic
+`<script src>`, no bundler, no server). The **wallet file the builder produces is always a
+single self-contained file** regardless of which builder you use.
+
 ### Build from source
 
 ```bash
-node build/build.mjs     # -> dist/coldphrase.html + dist/SHA256SUMS.txt
-npm test                 # crypto + build-integrity + end-to-end tests
+npm run build     # -> dist/coldphrase.html (+SHA256SUMS) and web/ (multi-file)
+npm test          # crypto + build-integrity + end-to-end tests
 ```
 
 No dependencies to install — the build and tests use only Node's standard library and the

@@ -6,7 +6,7 @@
  * occurrence, so the build's single-pass replace targets it (never a comment). */
 var CP = (typeof CP !== 'undefined') ? CP : {};
 
-CP.LIB_B64 = document.getElementById('argon2b64').textContent.trim();
+CP.LIB_B64 = CP.libB64();
 CP.VIEWER = `__VIEWER_TEMPLATE__`;
 
 CP.setStatus = function (html, cls, asHtml) {

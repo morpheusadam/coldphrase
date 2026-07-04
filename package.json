@@ -20,11 +20,13 @@
     "plausible-deniability"
   ],
   "scripts": {
-    "build": "node build/build.mjs",
+    "build": "node build/build.mjs && node build/build-web.mjs",
+    "build:single": "node build/build.mjs",
+    "build:web": "node build/build-web.mjs",
     "test:crypto": "node tests/crypto.test.mjs",
     "test:build": "node tests/build-verify.mjs",
     "test:e2e": "node tests/e2e.test.mjs",
-    "test": "node tests/crypto.test.mjs && node build/build.mjs && node tests/build-verify.mjs && node tests/e2e.test.mjs"
+    "test": "node tests/crypto.test.mjs && node build/build.mjs && node build/build-web.mjs && node tests/build-verify.mjs && node tests/e2e.test.mjs"
   },
   "engines": { "node": ">=18" }
 }

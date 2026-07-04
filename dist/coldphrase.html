@@ -10160,10 +10160,16 @@ CP.sha256hex = async function (bytes) {
   return s;
 };
 
+// Source the base64 either from an external data file (window.CP_LIB, multi-file
+// build) or an inline <script id="argon2b64"> element (single-file build).
+CP.libB64 = function () {
+  if (typeof window !== 'undefined' && window.CP_LIB) return window.CP_LIB.trim();
+  return document.getElementById('argon2b64').textContent.trim();
+};
+
 // Verify-then-eval. Exposed as a promise every entry point awaits before using hashwasm.
 CP.LIB_READY = (async function () {
-  var el = document.getElementById('argon2b64');
-  var bytes = CP.b64ToBytes(el.textContent.trim());
+  var bytes = CP.b64ToBytes(CP.libB64());
   var h = await CP.sha256hex(bytes);
   if (h !== CP.LIB_SHA256) throw new Error('lib-hash-mismatch');
   (0, eval)(new TextDecoder().decode(bytes)); // defines global `hashwasm`
@@ -10374,7 +10380,7 @@ CP.initTheme = function () {
  * against the official 2048-word list. Encryptor page only. */
 var CP = (typeof CP !== 'undefined') ? CP : {};
 
-CP.BIP39 = document.getElementById('bip39').textContent.trim().split(/\s+/);
+CP.BIP39 = ((typeof window !== 'undefined' && window.CP_BIP39) || document.getElementById('bip39').textContent).trim().split(/\s+/);
 CP.wordCount = 12; // 0 => free-text mode
 
 CP.gridInputs = function () {
@@ -10463,7 +10469,7 @@ CP.initWordGrid = function () {
  * Uses rejection sampling so the word choice is unbiased. Encryptor page only. */
 var CP = (typeof CP !== 'undefined') ? CP : {};
 
-CP.EFF = document.getElementById('eff').textContent.trim().split(/\s+/);
+CP.EFF = ((typeof window !== 'undefined' && window.CP_EFF) || document.getElementById('eff').textContent).trim().split(/\s+/);
 CP.PASSPHRASE_WORDS = 6;
 CP.PASSPHRASE_BITS = Math.round(CP.PASSPHRASE_WORDS * Math.log2(CP.EFF.length));
 
@@ -10547,7 +10553,7 @@ CP.updateMeter = function (p, exactBits) {
  * occurrence, so the build's single-pass replace targets it (never a comment). */
 var CP = (typeof CP !== 'undefined') ? CP : {};
 
-CP.LIB_B64 = document.getElementById('argon2b64').textContent.trim();
+CP.LIB_B64 = CP.libB64();
 CP.VIEWER = `<!doctype html>
 <!-- Snake — a small offline browser game. -->
 <html lang="en" dir="ltr">
@@ -10843,10 +10849,16 @@ CP.sha256hex = async function (bytes) {
   return s;
 };
 
+// Source the base64 either from an external data file (window.CP_LIB, multi-file
+// build) or an inline <script id="argon2b64"> element (single-file build).
+CP.libB64 = function () {
+  if (typeof window !== 'undefined' && window.CP_LIB) return window.CP_LIB.trim();
+  return document.getElementById('argon2b64').textContent.trim();
+};
+
 // Verify-then-eval. Exposed as a promise every entry point awaits before using hashwasm.
 CP.LIB_READY = (async function () {
-  var el = document.getElementById('argon2b64');
-  var bytes = CP.b64ToBytes(el.textContent.trim());
+  var bytes = CP.b64ToBytes(CP.libB64());
   var h = await CP.sha256hex(bytes);
   if (h !== CP.LIB_SHA256) throw new Error('lib-hash-mismatch');
   (0, eval)(new TextDecoder().decode(bytes)); // defines global \`hashwasm\`
