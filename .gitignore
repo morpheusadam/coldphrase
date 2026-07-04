@@ -1,0 +1,16 @@
+# dependencies / tooling
+node_modules/
+*.log
+
+# NEVER commit secrets or generated wallet files
+wallet-secret.html
+*.secret
+*.seed
+secret.txt
+crypto.txt
+git.txt
+*.token
+
+# OS noise
+Thumbs.db
+.DS_Store

@@ -1,0 +1,9 @@
+# Normalize everything to LF in the repo so the published dist/ bytes always
+# match dist/SHA256SUMS.txt regardless of the contributor's OS.
+* text=auto eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf

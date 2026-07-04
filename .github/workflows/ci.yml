@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # No dependencies to install — build and tests use Node's stdlib + vendored assets.
+      - name: Crypto unit tests
+        run: node tests/crypto.test.mjs
+      - name: Build single-file app
+        run: node build/build.mjs
+      - name: Build integrity + feature checks
+        run: node tests/build-verify.mjs
+      - name: End-to-end (encrypt → viewer decrypt)
+        run: node tests/e2e.test.mjs
+      - name: Confirm dist is in sync with source
+        run: git diff --exit-code dist/ || (echo "dist/ is stale — run 'node build/build.mjs' and commit" && exit 1)

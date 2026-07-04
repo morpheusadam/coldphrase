@@ -1,0 +1,479 @@
+{
+  "$schema": "https://design-tokens.org/schema.json",
+  "meta": {
+    "name": "Cipher Tool Design System",
+    "style": "vercel-terminal-minimal",
+    "reference": "skills.sh aesthetic — Geist design language, monospace-first, flat, 1px hairline borders, pure black/white theming",
+    "version": "1.0.0",
+    "themes": ["light", "dark"],
+    "defaultTheme": "dark"
+  },
+
+  "color": {
+    "light": {
+      "background": {
+        "primary": "#ffffff",
+        "secondary": "#fafafa",
+        "tertiary": "#f2f2f2",
+        "inverse": "#000000",
+        "code": "#fafafa",
+        "hover": "#f5f5f5",
+        "active": "#ebebeb"
+      },
+      "foreground": {
+        "primary": "#000000",
+        "secondary": "#666666",
+        "tertiary": "#999999",
+        "muted": "#a1a1a1",
+        "inverse": "#ffffff",
+        "link": "#0068d6",
+        "linkHover": "#0053ab"
+      },
+      "border": {
+        "default": "#eaeaea",
+        "subtle": "#f2f2f2",
+        "strong": "#000000",
+        "focus": "#0068d6",
+        "input": "#d4d4d4",
+        "inputHover": "#a1a1a1"
+      },
+      "accent": {
+        "default": "#0068d6",
+        "success": "#0f7b3d",
+        "successBg": "#eafaf1",
+        "warning": "#a35200",
+        "warningBg": "#fff4e5",
+        "error": "#e5484d",
+        "errorBg": "#fdecec",
+        "info": "#0068d6",
+        "infoBg": "#ebf5ff"
+      },
+      "selection": {
+        "background": "#b3d7ff",
+        "foreground": "#000000"
+      }
+    },
+    "dark": {
+      "background": {
+        "primary": "#000000",
+        "secondary": "#0a0a0a",
+        "tertiary": "#111111",
+        "inverse": "#ffffff",
+        "code": "#0a0a0a",
+        "hover": "#141414",
+        "active": "#1f1f1f"
+      },
+      "foreground": {
+        "primary": "#ededed",
+        "secondary": "#a1a1a1",
+        "tertiary": "#7d7d7d",
+        "muted": "#666666",
+        "inverse": "#000000",
+        "link": "#52a8ff",
+        "linkHover": "#83c1ff"
+      },
+      "border": {
+        "default": "#262626",
+        "subtle": "#1a1a1a",
+        "strong": "#ededed",
+        "focus": "#52a8ff",
+        "input": "#333333",
+        "inputHover": "#525252"
+      },
+      "accent": {
+        "default": "#52a8ff",
+        "success": "#3dd68c",
+        "successBg": "#0a1f14",
+        "warning": "#f5a623",
+        "warningBg": "#231a0a",
+        "error": "#ff6166",
+        "errorBg": "#2a0e0f",
+        "info": "#52a8ff",
+        "infoBg": "#0a1830"
+      },
+      "selection": {
+        "background": "#1d3d5e",
+        "foreground": "#ffffff"
+      }
+    }
+  },
+
+  "typography": {
+    "fontFamily": {
+      "sans": "'Geist', 'Inter', -apple-system, 'Segoe UI', sans-serif",
+      "mono": "'Geist Mono', 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace",
+      "primary": "{typography.fontFamily.mono}",
+      "note": "Monospace is the hero font — headings, code, inputs, and buttons all use mono. Sans only for long body paragraphs."
+    },
+    "fontSize": {
+      "xs": "11px",
+      "sm": "12px",
+      "base": "14px",
+      "md": "16px",
+      "lg": "20px",
+      "xl": "24px",
+      "2xl": "32px",
+      "3xl": "40px",
+      "asciiArt": "10px"
+    },
+    "fontWeight": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "lineHeight": {
+      "tight": 1.2,
+      "snug": 1.4,
+      "normal": 1.6,
+      "code": 1.5,
+      "asciiArt": 1.1
+    },
+    "letterSpacing": {
+      "tight": "-0.02em",
+      "normal": "0",
+      "wide": "0.02em",
+      "mono": "0",
+      "label": "0.04em"
+    },
+    "textStyles": {
+      "h1": { "font": "mono", "size": "{typography.fontSize.2xl}", "weight": 600, "letterSpacing": "-0.02em", "lineHeight": 1.2 },
+      "h2": { "font": "mono", "size": "{typography.fontSize.lg}", "weight": 600, "letterSpacing": "-0.01em", "lineHeight": 1.3 },
+      "h3": { "font": "mono", "size": "{typography.fontSize.md}", "weight": 500, "lineHeight": 1.4 },
+      "body": { "font": "sans", "size": "{typography.fontSize.base}", "weight": 400, "lineHeight": 1.6 },
+      "caption": { "font": "mono", "size": "{typography.fontSize.sm}", "weight": 400, "color": "{color.foreground.secondary}" },
+      "label": { "font": "mono", "size": "{typography.fontSize.xs}", "weight": 500, "letterSpacing": "0.04em", "transform": "uppercase", "color": "{color.foreground.secondary}" },
+      "code": { "font": "mono", "size": "{typography.fontSize.sm}", "weight": 400, "lineHeight": 1.5 }
+    }
+  },
+
+  "spacing": {
+    "0": "0px",
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "24": "96px"
+  },
+
+  "radius": {
+    "none": "0px",
+    "sm": "4px",
+    "md": "6px",
+    "lg": "8px",
+    "full": "9999px",
+    "note": "Keep radii small. skills.sh uses 6px max on cards/inputs — never large rounded corners."
+  },
+
+  "border": {
+    "width": {
+      "hairline": "1px",
+      "medium": "2px"
+    },
+    "style": "solid"
+  },
+
+  "shadow": {
+    "none": "none",
+    "focusRing": "0 0 0 2px {color.border.focus}",
+    "focusRingOffset": "0 0 0 1px {color.background.primary}, 0 0 0 3px {color.border.focus}",
+    "note": "No drop shadows anywhere. Depth is expressed with 1px borders and background steps only."
+  },
+
+  "motion": {
+    "duration": {
+      "instant": "80ms",
+      "fast": "120ms",
+      "normal": "180ms",
+      "slow": "250ms"
+    },
+    "easing": {
+      "default": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "in": "cubic-bezier(0.4, 0, 1, 1)",
+      "out": "cubic-bezier(0, 0, 0.2, 1)"
+    },
+    "properties": ["transform", "opacity"],
+    "note": "Animate transform/opacity only (composited). Color changes on hover use transition on background-color at 120ms — acceptable for micro-interactions on small elements."
+  },
+
+  "layout": {
+    "container": {
+      "maxWidth": "1080px",
+      "narrowWidth": "640px",
+      "paddingX": "{spacing.6}"
+    },
+    "grid": {
+      "gap": "{spacing.4}"
+    },
+    "zIndex": {
+      "base": 0,
+      "dropdown": 100,
+      "sticky": 200,
+      "overlay": 300,
+      "modal": 400,
+      "toast": 500
+    }
+  },
+
+  "component": {
+    "button": {
+      "primary": {
+        "background": "{color.foreground.primary}",
+        "foreground": "{color.background.primary}",
+        "border": "1px solid {color.foreground.primary}",
+        "hover": { "background": "transparent", "foreground": "{color.foreground.primary}" },
+        "note": "Inverted fill: black button on light theme, white button on dark. Hover flips to outline."
+      },
+      "secondary": {
+        "background": "transparent",
+        "foreground": "{color.foreground.primary}",
+        "border": "1px solid {color.border.input}",
+        "hover": { "borderColor": "{color.border.inputHover}", "background": "{color.background.hover}" }
+      },
+      "ghost": {
+        "background": "transparent",
+        "foreground": "{color.foreground.secondary}",
+        "border": "1px solid transparent",
+        "hover": { "foreground": "{color.foreground.primary}", "background": "{color.background.hover}" }
+      },
+      "danger": {
+        "background": "transparent",
+        "foreground": "{color.accent.error}",
+        "border": "1px solid {color.accent.error}",
+        "hover": { "background": "{color.accent.errorBg}" }
+      },
+      "size": {
+        "sm": { "height": "32px", "paddingX": "{spacing.3}", "fontSize": "{typography.fontSize.sm}" },
+        "md": { "height": "40px", "paddingX": "{spacing.4}", "fontSize": "{typography.fontSize.base}" },
+        "lg": { "height": "48px", "paddingX": "{spacing.6}", "fontSize": "{typography.fontSize.md}" }
+      },
+      "font": "mono",
+      "fontWeight": 500,
+      "radius": "{radius.md}",
+      "transition": "background-color 120ms, border-color 120ms, color 120ms",
+      "disabled": { "opacity": 0.4, "cursor": "not-allowed" }
+    },
+
+    "input": {
+      "background": "{color.background.primary}",
+      "foreground": "{color.foreground.primary}",
+      "placeholder": "{color.foreground.tertiary}",
+      "border": "1px solid {color.border.input}",
+      "radius": "{radius.md}",
+      "height": { "sm": "32px", "md": "40px", "lg": "48px" },
+      "paddingX": "{spacing.3}",
+      "font": "mono",
+      "fontSize": "{typography.fontSize.base}",
+      "hover": { "borderColor": "{color.border.inputHover}" },
+      "focus": { "borderColor": "{color.border.focus}", "boxShadow": "{shadow.focusRing}", "outline": "none" },
+      "error": { "borderColor": "{color.accent.error}" },
+      "disabled": { "background": "{color.background.secondary}", "opacity": 0.5 }
+    },
+
+    "textarea": {
+      "extends": "{component.input}",
+      "minHeight": "120px",
+      "paddingY": "{spacing.3}",
+      "resize": "vertical",
+      "note": "Used for cipher input/output payloads — always mono font."
+    },
+
+    "card": {
+      "background": "{color.background.primary}",
+      "border": "1px solid {color.border.default}",
+      "radius": "{radius.md}",
+      "padding": "{spacing.6}",
+      "hover": { "borderColor": "{color.border.inputHover}" },
+      "header": { "paddingBottom": "{spacing.4}", "borderBottom": "1px solid {color.border.default}" }
+    },
+
+    "codeBlock": {
+      "background": "{color.background.code}",
+      "foreground": "{color.foreground.primary}",
+      "border": "1px solid {color.border.default}",
+      "radius": "{radius.md}",
+      "padding": "{spacing.4}",
+      "font": "mono",
+      "fontSize": "{typography.fontSize.sm}",
+      "lineHeight": 1.5,
+      "prompt": { "symbol": "$", "color": "{color.foreground.tertiary}", "marginRight": "{spacing.2}" },
+      "copyButton": { "position": "top-right", "style": "{component.button.ghost}", "size": "sm" }
+    },
+
+    "inlineCode": {
+      "background": "{color.background.tertiary}",
+      "border": "1px solid {color.border.default}",
+      "radius": "{radius.sm}",
+      "paddingX": "6px",
+      "paddingY": "2px",
+      "font": "mono",
+      "fontSize": "0.9em"
+    },
+
+    "kbd": {
+      "background": "{color.background.secondary}",
+      "border": "1px solid {color.border.input}",
+      "borderBottomWidth": "2px",
+      "radius": "{radius.sm}",
+      "paddingX": "6px",
+      "paddingY": "2px",
+      "font": "mono",
+      "fontSize": "{typography.fontSize.xs}",
+      "color": "{color.foreground.secondary}"
+    },
+
+    "asciiHero": {
+      "font": "mono",
+      "fontSize": "clamp(6px, 1.4vw, 12px)",
+      "lineHeight": 1.1,
+      "whiteSpace": "pre",
+      "color": "{color.foreground.primary}",
+      "textAlign": "center",
+      "userSelect": "none",
+      "note": "Big ASCII-art logo like skills.sh. Generate with figlet ANSI Shadow style."
+    },
+
+    "table": {
+      "headerBackground": "transparent",
+      "headerColor": "{color.foreground.tertiary}",
+      "headerFont": "mono",
+      "headerFontSize": "{typography.fontSize.xs}",
+      "headerTransform": "uppercase",
+      "headerLetterSpacing": "0.04em",
+      "rowBorder": "1px solid {color.border.subtle}",
+      "rowHover": "{color.background.hover}",
+      "cellPaddingY": "{spacing.3}",
+      "cellPaddingX": "{spacing.4}",
+      "font": "mono",
+      "fontSize": "{typography.fontSize.sm}"
+    },
+
+    "tabs": {
+      "container": { "borderBottom": "1px solid {color.border.default}" },
+      "item": {
+        "font": "mono",
+        "fontSize": "{typography.fontSize.sm}",
+        "color": "{color.foreground.secondary}",
+        "paddingX": "{spacing.3}",
+        "paddingY": "{spacing.2}",
+        "borderBottom": "2px solid transparent"
+      },
+      "itemActive": {
+        "color": "{color.foreground.primary}",
+        "borderBottomColor": "{color.foreground.primary}"
+      },
+      "itemHover": { "color": "{color.foreground.primary}" }
+    },
+
+    "badge": {
+      "font": "mono",
+      "fontSize": "{typography.fontSize.xs}",
+      "paddingX": "{spacing.2}",
+      "paddingY": "2px",
+      "radius": "{radius.sm}",
+      "variants": {
+        "neutral": { "background": "{color.background.tertiary}", "color": "{color.foreground.secondary}", "border": "1px solid {color.border.default}" },
+        "success": { "background": "{color.accent.successBg}", "color": "{color.accent.success}", "border": "1px solid {color.accent.success}" },
+        "error": { "background": "{color.accent.errorBg}", "color": "{color.accent.error}", "border": "1px solid {color.accent.error}" }
+      }
+    },
+
+    "toast": {
+      "background": "{color.background.primary}",
+      "border": "1px solid {color.border.default}",
+      "radius": "{radius.md}",
+      "padding": "{spacing.4}",
+      "font": "mono",
+      "fontSize": "{typography.fontSize.sm}",
+      "position": "bottom-right",
+      "animation": "translateY + opacity, 180ms out"
+    },
+
+    "divider": {
+      "color": "{color.border.default}",
+      "width": "1px"
+    },
+
+    "fileDropzone": {
+      "background": "{color.background.secondary}",
+      "border": "1px dashed {color.border.input}",
+      "radius": "{radius.md}",
+      "padding": "{spacing.8}",
+      "font": "mono",
+      "fontSize": "{typography.fontSize.sm}",
+      "color": "{color.foreground.secondary}",
+      "hover": { "borderColor": "{color.foreground.primary}", "background": "{color.background.hover}" },
+      "dragActive": { "borderColor": "{color.border.focus}", "borderStyle": "solid" },
+      "note": "For uploading the encrypted file back to decrypt."
+    },
+
+    "passwordField": {
+      "extends": "{component.input}",
+      "toggleVisibilityButton": { "style": "{component.button.ghost}", "size": "sm", "position": "inside-right" },
+      "strengthMeter": {
+        "height": "3px",
+        "radius": "{radius.full}",
+        "track": "{color.background.tertiary}",
+        "levels": {
+          "weak": "{color.accent.error}",
+          "medium": "{color.accent.warning}",
+          "strong": "{color.accent.success}"
+        }
+      }
+    }
+  },
+
+  "cssVariables": {
+    "note": "Recommended :root mapping for implementation",
+    "example": {
+      ":root": {
+        "--bg": "#000000",
+        "--bg-2": "#0a0a0a",
+        "--bg-3": "#111111",
+        "--fg": "#ededed",
+        "--fg-2": "#a1a1a1",
+        "--fg-3": "#7d7d7d",
+        "--border": "#262626",
+        "--border-input": "#333333",
+        "--accent": "#52a8ff",
+        "--success": "#3dd68c",
+        "--error": "#ff6166",
+        "--font-mono": "'Geist Mono', 'JetBrains Mono', monospace",
+        "--font-sans": "'Geist', 'Inter', sans-serif",
+        "--radius": "6px",
+        "--space": "4px"
+      },
+      "[data-theme='light']": {
+        "--bg": "#ffffff",
+        "--bg-2": "#fafafa",
+        "--bg-3": "#f2f2f2",
+        "--fg": "#000000",
+        "--fg-2": "#666666",
+        "--fg-3": "#999999",
+        "--border": "#eaeaea",
+        "--border-input": "#d4d4d4",
+        "--accent": "#0068d6",
+        "--success": "#0f7b3d",
+        "--error": "#e5484d"
+      }
+    }
+  },
+
+  "designPrinciples": [
+    "Monospace-first: هدینگ‌ها، دکمه‌ها، اینپوت‌ها و خروجی رمز همه Geist Mono",
+    "Flat & hairline: هیچ سایه‌ای وجود ندارد — عمق فقط با بوردر 1px و پله‌های background",
+    "Pure black dark mode: پس‌زمینه #000 خالص، نه خاکستری تیره",
+    "Small radii: حداکثر 6px — هیچ گوشه گرد بزرگی مجاز نیست",
+    "Inverted primary button: دکمه اصلی fill معکوس (سفید روی مشکی / مشکی روی سفید) و hover به outline تبدیل می‌شود",
+    "Terminal cues: پرامپت $ در بلاک‌های کد، ASCII art در هدر، kbd hint برای شورتکات‌ها",
+    "Micro-motion only: فقط transform/opacity با 120–180ms، بدون انیمیشن نمایشی",
+    "Generous whitespace: فاصله عمودی 64–96px بین سکشن‌ها، کانتینر 1080px"
+  ]
+}

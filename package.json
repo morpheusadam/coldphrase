@@ -1,0 +1,30 @@
+{
+  "name": "coldphrase",
+  "version": "6.0.0",
+  "description": "Offline, single-file cold storage for crypto seed phrases. Argon2id + AES-256-GCM in one self-contained HTML file, with duress decoy and tamper detection.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "seed-phrase",
+    "cold-storage",
+    "argon2id",
+    "aes-256-gcm",
+    "bip39",
+    "crypto-wallet",
+    "offline",
+    "encryption",
+    "webcrypto",
+    "self-contained",
+    "trust-wallet",
+    "duress",
+    "plausible-deniability"
+  ],
+  "scripts": {
+    "build": "node build/build.mjs",
+    "test:crypto": "node tests/crypto.test.mjs",
+    "test:build": "node tests/build-verify.mjs",
+    "test:e2e": "node tests/e2e.test.mjs",
+    "test": "node tests/crypto.test.mjs && node build/build.mjs && node tests/build-verify.mjs && node tests/e2e.test.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
