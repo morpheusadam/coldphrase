@@ -1,14 +1,26 @@
-# ColdPhrase — Offline, Single-File Cold Storage for Crypto Seed Phrases
+<div align="center">
+
+<img src="assets/hero.svg" alt="ColdPhrase — offline single-file seed-phrase vault" width="880">
+
+# ColdPhrase
+
+**Offline, single-file cold storage for crypto seed phrases.**
+Argon2id + AES-256-GCM in one self-contained HTML file — with a duress decoy and an optional Snake-game disguise.
+
+<p>
+  <img alt="license: MIT" src="https://img.shields.io/badge/license-MIT-black">
+  <img alt="runtime deps: 0" src="https://img.shields.io/badge/runtime%20deps-0-black">
+  <img alt="offline: 100%" src="https://img.shields.io/badge/offline-100%25-black">
+  <img alt="KDF: Argon2id 256MiB" src="https://img.shields.io/badge/KDF-Argon2id%20256MiB-black">
+  <img alt="cipher: AES-256-GCM" src="https://img.shields.io/badge/cipher-AES--256--GCM-black">
+  <a href="https://github.com/morpheusadam/coldphrase/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/morpheusadam/coldphrase?style=social"></a>
+</p>
+
+</div>
 
 > Encrypt a wallet recovery phrase into **one self-contained HTML file** that decrypts
 > **fully offline** — no server, no install, no dependencies at runtime. Hardened with
 > **Argon2id + AES-256-GCM**, a **duress decoy**, tamper detection, and a network-blocking CSP.
-
-![license: MIT](https://img.shields.io/badge/license-MIT-black)
-![runtime deps: 0](https://img.shields.io/badge/runtime%20deps-0-black)
-![offline: 100%](https://img.shields.io/badge/offline-100%25-black)
-![KDF: Argon2id 256MiB](https://img.shields.io/badge/KDF-Argon2id%20256MiB-black)
-![cipher: AES-256-GCM](https://img.shields.io/badge/cipher-AES--256--GCM-black)
 
 ColdPhrase turns a Trust Wallet / MetaMask–style **BIP39 seed phrase** (or any secret text)
 into a portable `wallet-secret.html`. Double-click that file in any browser, type your
@@ -60,6 +72,31 @@ attacker who steals it into a memory-hard offline brute-force against a strong p
 
 See **[docs/CRYPTOGRAPHY.md](docs/CRYPTOGRAPHY.md)** for the full scheme and
 **[docs/BENCHMARKS.md](docs/BENCHMARKS.md)** for cracking-cost math.
+
+### How hard is it to break?
+
+The cipher is never the target — only your password is. Behind Argon2id's memory-hard wall,
+entropy is everything:
+
+<div align="center"><img src="assets/entropy-chart.svg" alt="Brute-force time by password entropy — from ~4 hours for a weak password to ~480 billion years for the generated one" width="880"></div>
+
+---
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><b>Builder — encrypt a phrase</b><br><img src="assets/screenshots/builder.png" alt="ColdPhrase builder"></td>
+    <td width="50%"><b>Snake-game cover</b><br><img src="assets/screenshots/snake.png" alt="Snake game cover"></td>
+  </tr>
+  <tr>
+    <td width="50%"><b>Recover — unlock screen</b><br><img src="assets/screenshots/unlock.png" alt="Unlock screen"></td>
+    <td width="50%"><b>Decrypted output</b><br><img src="assets/screenshots/output.png" alt="Decrypted phrase grid"></td>
+  </tr>
+</table>
+
+The wallet file opens as the Snake game on the left; typing your secret word reveals the
+unlock screen. All screens are theme-aware (dark shown).
 
 ---
 
@@ -161,6 +198,14 @@ seed phrase encryption · crypto wallet cold storage · offline seed backup ·
 BIP39 mnemonic encryption · Argon2id · AES-256-GCM · WebCrypto · Trust Wallet backup ·
 MetaMask recovery phrase · hardware-free cold wallet · plausible deniability · duress password ·
 self-custody · air-gapped encryption · single-file HTML encryptor · zero-dependency.
+
+## Star history
+
+If ColdPhrase is useful to you, a ⭐ helps other self-custodians find it.
+
+<a href="https://star-history.com/#morpheusadam/coldphrase&Date">
+  <img src="https://api.star-history.com/svg?repos=morpheusadam/coldphrase&type=Date" alt="ColdPhrase star history" width="600">
+</a>
 
 ## License
 
