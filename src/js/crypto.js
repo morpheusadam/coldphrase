@@ -133,7 +133,9 @@ CP.buildPayload = async function (opts) {
   for (var i = 0; i < plan.length; i++) {
     vols.push(await CP.encVolume(plan[i].pw, plan[i].text, params, i));
   }
-  return { v: CP.VERSION, kdf: 'argon2id', m: params.m, t: params.t, p: params.p, vols: vols };
+  var payload = { v: CP.VERSION, kdf: 'argon2id', m: params.m, t: params.t, p: params.p, vols: vols };
+  if (opts.triggerHex) payload.trig = opts.triggerHex; // Snake-game disguise: reveal on secret word
+  return payload;
 };
 
 // BIP39-valid mnemonic from raw entropy (used for throwaway decoys; deterministic checksum).
@@ -148,4 +150,29 @@ CP.phraseFromEntropy = async function (entBytes, wordlist) {
   var n = bits.length / 11, out = [];
   for (var k = 0; k < n; k++) out.push(wordlist[parseInt(bits.slice(k * 11, k * 11 + 11), 2)]);
   return out.join(' ');
+};
+
+// ---- cover trigger (Snake-game disguise) ----
+// The wallet file can masquerade as a Snake game; typing a secret word reveals
+// the unlock screen. We store only SHA-256(lowercased word) so the word itself
+// is not written into the file. Case-insensitive by construction.
+CP.TRIG_MIN = 3;
+CP.TRIG_MAX = 16;
+CP.sha256hex = async function (bytes) {
+  var d = await crypto.subtle.digest('SHA-256', bytes);
+  var a = new Uint8Array(d), s = '';
+  for (var i = 0; i < a.length; i++) s += a[i].toString(16).padStart(2, '0');
+  return s;
+};
+CP.triggerHashHex = function (word) {
+  return CP.sha256hex(CP.te.encode(word.toLowerCase()));
+};
+// True if any recent suffix (length TRIG_MIN..TRIG_MAX) of `buffer` hashes to
+// `storedHex`. Length is not revealed by the stored hash.
+CP.triggerMatches = async function (buffer, storedHex) {
+  var b = buffer.toLowerCase();
+  for (var L = CP.TRIG_MIN; L <= CP.TRIG_MAX && L <= b.length; L++) {
+    if (await CP.sha256hex(CP.te.encode(b.slice(-L))) === storedHex) return true;
+  }
+  return false;
 };

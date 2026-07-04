@@ -209,6 +209,14 @@ code {
   font-size: 12px; color: var(--warning); line-height: 1.9;
 }
 
+/* snake cover */
+.gamecard { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.gamehud { display: flex; justify-content: space-between; align-items: baseline; width: 100%; font-size: 12px; color: var(--fg-2); }
+.gamehud #score { color: var(--fg); letter-spacing: 0.04em; }
+.gamehud .hint { color: var(--fg-3); }
+#board { width: 100%; max-width: 480px; height: auto; aspect-ratio: 1 / 1; image-rendering: pixelated; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); }
+#gameover { font-size: 13px; color: var(--warning); letter-spacing: 0.02em; }
+
 /* viewer output */
 #secretWrap { margin-top: 18px; cursor: pointer; }
 #secretWrap.masked .content { filter: blur(9px); }
@@ -262,6 +270,15 @@ pre#out {
         <input type="password" id="dpw1" class="pwd" autocomplete="new-password">
         <label>Repeat duress password</label>
         <input type="password" id="dpw2" class="pwd" autocomplete="new-password">
+      </div>
+    </div>
+
+    <div class="duress" id="disguise">
+      <div class="head" id="disguiseHead"><input type="checkbox" id="disguiseOn" checked> <span>🐍 Disguise output as a Snake game</span></div>
+      <div class="body" id="disguiseBody">
+        <p class="sub">The file opens as a playable Snake game. It reveals the unlock screen only after someone types your secret word (any casing). Only its SHA-256 is stored, not the word.</p>
+        <label>Secret word to reveal the unlock screen</label>
+        <input type="text" id="trigger" class="pwd" value="hesam" autocomplete="off" spellcheck="false" style="text-transform:lowercase">
       </div>
     </div>
 
@@ -10282,7 +10299,9 @@ CP.buildPayload = async function (opts) {
   for (var i = 0; i < plan.length; i++) {
     vols.push(await CP.encVolume(plan[i].pw, plan[i].text, params, i));
   }
-  return { v: CP.VERSION, kdf: 'argon2id', m: params.m, t: params.t, p: params.p, vols: vols };
+  var payload = { v: CP.VERSION, kdf: 'argon2id', m: params.m, t: params.t, p: params.p, vols: vols };
+  if (opts.triggerHex) payload.trig = opts.triggerHex; // Snake-game disguise: reveal on secret word
+  return payload;
 };
 
 // BIP39-valid mnemonic from raw entropy (used for throwaway decoys; deterministic checksum).
@@ -10297,6 +10316,31 @@ CP.phraseFromEntropy = async function (entBytes, wordlist) {
   var n = bits.length / 11, out = [];
   for (var k = 0; k < n; k++) out.push(wordlist[parseInt(bits.slice(k * 11, k * 11 + 11), 2)]);
   return out.join(' ');
+};
+
+// ---- cover trigger (Snake-game disguise) ----
+// The wallet file can masquerade as a Snake game; typing a secret word reveals
+// the unlock screen. We store only SHA-256(lowercased word) so the word itself
+// is not written into the file. Case-insensitive by construction.
+CP.TRIG_MIN = 3;
+CP.TRIG_MAX = 16;
+CP.sha256hex = async function (bytes) {
+  var d = await crypto.subtle.digest('SHA-256', bytes);
+  var a = new Uint8Array(d), s = '';
+  for (var i = 0; i < a.length; i++) s += a[i].toString(16).padStart(2, '0');
+  return s;
+};
+CP.triggerHashHex = function (word) {
+  return CP.sha256hex(CP.te.encode(word.toLowerCase()));
+};
+// True if any recent suffix (length TRIG_MIN..TRIG_MAX) of `buffer` hashes to
+// `storedHex`. Length is not revealed by the stored hash.
+CP.triggerMatches = async function (buffer, storedHex) {
+  var b = buffer.toLowerCase();
+  for (var L = CP.TRIG_MIN; L <= CP.TRIG_MAX && L <= b.length; L++) {
+    if (await CP.sha256hex(CP.te.encode(b.slice(-L))) === storedHex) return true;
+  }
+  return false;
 };
 
 /* theme.js — light/dark toggle. Default is dark (per design tokens). Preference
@@ -10500,17 +10544,13 @@ var CP = (typeof CP !== 'undefined') ? CP : {};
 
 CP.LIB_B64 = document.getElementById('argon2b64').textContent.trim();
 CP.VIEWER = `<!doctype html>
-<!--
-  ColdPhrase — wallet file (viewer). Self-contained and offline.
-  CSP note (viewer): this page never downloads, so it uses a fully-closed
-  default-src 'none' allowlist — no network of any kind is reachable.
--->
+<!-- Snake — a small offline browser game. -->
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<title>Encrypted Vault</title>
+<title>Snake</title>
 <style>/* Generated from Cipher Tool Design System v1.0.0 — do not edit; edit the tokens. */
 :root {
   --bg: #000000;
@@ -10703,6 +10743,14 @@ code {
   font-size: 12px; color: var(--warning); line-height: 1.9;
 }
 
+/* snake cover */
+.gamecard { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.gamehud { display: flex; justify-content: space-between; align-items: baseline; width: 100%; font-size: 12px; color: var(--fg-2); }
+.gamehud #score { color: var(--fg); letter-spacing: 0.04em; }
+.gamehud .hint { color: var(--fg-3); }
+#board { width: 100%; max-width: 480px; height: auto; aspect-ratio: 1 / 1; image-rendering: pixelated; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); }
+#gameover { font-size: 13px; color: var(--warning); letter-spacing: 0.02em; }
+
 /* viewer output */
 #secretWrap { margin-top: 18px; cursor: pointer; }
 #secretWrap.masked .content { filter: blur(9px); }
@@ -10720,27 +10768,39 @@ pre#out {
 <body>
 <div class="wrap">
   <div class="topbar">
-    <span class="brand">▌ <b>COLDPHRASE</b> · vault</span>
+    <span class="brand" id="brand">▌ <b>SNAKE</b></span>
     <button type="button" class="btn btn-ghost" id="themeToggle">[ light ]</button>
   </div>
 
-  <div class="card">
-    <h1>Encrypted vault</h1>
-    <p class="sub">Argon2id (256 MiB, 4 passes) + HKDF-SHA512 + AES-256-GCM with authenticated parameters. Decryption runs fully offline, in memory only; the network is blocked by CSP and nothing is written to disk.</p>
-    <label>Password</label>
-    <input type="password" id="pw" class="pwd" autofocus autocomplete="off">
-    <button id="open" class="btn btn-primary">Unlock</button>
-    <div id="status" class="status"></div>
-    <div id="secretWrap" hidden>
-      <div class="content">
-        <div class="grid" id="outGrid" hidden></div>
-        <pre id="out" hidden></pre>
-      </div>
-      <div id="revealHint"></div>
+  <!-- cover: a real, playable Snake game -->
+  <div id="game">
+    <div class="card gamecard">
+      <div class="gamehud"><span id="score">score 0</span><span class="hint">arrow keys &middot; space to restart</span></div>
+      <canvas id="board" width="480" height="480"></canvas>
+      <div id="gameover" hidden>game over &mdash; press space</div>
     </div>
-    <div class="actions" id="actions" hidden>
-      <button id="copy" class="btn btn-secondary">Copy</button>
-      <button id="hide" class="btn btn-secondary">Hide</button>
+  </div>
+
+  <!-- revealed only when the secret word is typed -->
+  <div id="vault" hidden>
+    <div class="card">
+      <h1>Recover</h1>
+      <p class="sub">Enter your password. Everything runs offline, in memory only; the network is blocked and nothing is written to disk.</p>
+      <label>Password</label>
+      <input type="password" id="pw" class="pwd" autocomplete="off">
+      <button id="open" class="btn btn-primary">Unlock</button>
+      <div id="status" class="status"></div>
+      <div id="secretWrap" hidden>
+        <div class="content">
+          <div class="grid" id="outGrid" hidden></div>
+          <pre id="out" hidden></pre>
+        </div>
+        <div id="revealHint"></div>
+      </div>
+      <div class="actions" id="actions" hidden>
+        <button id="copy" class="btn btn-secondary">Copy</button>
+        <button id="hide" class="btn btn-secondary">Hide</button>
+      </div>
     </div>
   </div>
 </div>
@@ -10918,7 +10978,9 @@ CP.buildPayload = async function (opts) {
   for (var i = 0; i < plan.length; i++) {
     vols.push(await CP.encVolume(plan[i].pw, plan[i].text, params, i));
   }
-  return { v: CP.VERSION, kdf: 'argon2id', m: params.m, t: params.t, p: params.p, vols: vols };
+  var payload = { v: CP.VERSION, kdf: 'argon2id', m: params.m, t: params.t, p: params.p, vols: vols };
+  if (opts.triggerHex) payload.trig = opts.triggerHex; // Snake-game disguise: reveal on secret word
+  return payload;
 };
 
 // BIP39-valid mnemonic from raw entropy (used for throwaway decoys; deterministic checksum).
@@ -10933,6 +10995,31 @@ CP.phraseFromEntropy = async function (entBytes, wordlist) {
   var n = bits.length / 11, out = [];
   for (var k = 0; k < n; k++) out.push(wordlist[parseInt(bits.slice(k * 11, k * 11 + 11), 2)]);
   return out.join(' ');
+};
+
+// ---- cover trigger (Snake-game disguise) ----
+// The wallet file can masquerade as a Snake game; typing a secret word reveals
+// the unlock screen. We store only SHA-256(lowercased word) so the word itself
+// is not written into the file. Case-insensitive by construction.
+CP.TRIG_MIN = 3;
+CP.TRIG_MAX = 16;
+CP.sha256hex = async function (bytes) {
+  var d = await crypto.subtle.digest('SHA-256', bytes);
+  var a = new Uint8Array(d), s = '';
+  for (var i = 0; i < a.length; i++) s += a[i].toString(16).padStart(2, '0');
+  return s;
+};
+CP.triggerHashHex = function (word) {
+  return CP.sha256hex(CP.te.encode(word.toLowerCase()));
+};
+// True if any recent suffix (length TRIG_MIN..TRIG_MAX) of \`buffer\` hashes to
+// \`storedHex\`. Length is not revealed by the stored hash.
+CP.triggerMatches = async function (buffer, storedHex) {
+  var b = buffer.toLowerCase();
+  for (var L = CP.TRIG_MIN; L <= CP.TRIG_MAX && L <= b.length; L++) {
+    if (await CP.sha256hex(CP.te.encode(b.slice(-L))) === storedHex) return true;
+  }
+  return false;
 };
 
 /* theme.js — light/dark toggle. Default is dark (per design tokens). Preference
@@ -10954,6 +11041,101 @@ CP.initTheme = function () {
     try { localStorage.setItem('cp-theme', next); } catch (e) {}
     label();
   });
+};
+
+/* snake.js — the cover. When the file carries a trigger hash it opens as a plain
+ * Snake game; typing the secret word (any casing) reveals the unlock screen. The
+ * game is a genuine, playable canvas game so casual inspection sees only a game.
+ * Movement uses arrow keys only, so letters typed for the trigger never disturb
+ * play. DOM-only glue; the hashing/matching lives in crypto.js (testable). */
+var CP = (typeof CP !== 'undefined') ? CP : {};
+
+CP.revealUnlock = function () {
+  var game = document.getElementById('game');
+  if (game) game.hidden = true;
+  var brand = document.getElementById('brand');
+  if (brand) brand.innerHTML = '▌ <b>RECOVER</b>';
+  document.getElementById('vault').hidden = false;
+  var pw = document.getElementById('pw');
+  if (pw) pw.focus();
+  CP._revealed = true;
+  if (CP._snakeTimer) { clearInterval(CP._snakeTimer); CP._snakeTimer = null; }
+};
+
+CP.initSnake = function (triggerHex, onReveal) {
+  // ---- secret-word detector (runs regardless of whether the canvas exists) ----
+  var buf = '';
+  document.addEventListener('keydown', function (e) {
+    if (CP._revealed) return;
+    if (e.key && e.key.length === 1) {
+      buf = (buf + e.key).slice(-CP.TRIG_MAX);
+      CP.triggerMatches(buf, triggerHex).then(function (hit) { if (hit && !CP._revealed) onReveal(); });
+    }
+  });
+
+  var canvas = document.getElementById('board');
+  if (!canvas || !canvas.getContext) return; // headless / no canvas: detector still armed
+  var ctx = canvas.getContext('2d');
+  var scoreEl = document.getElementById('score');
+  var overEl = document.getElementById('gameover');
+
+  var GRID = 24, CELL = canvas.width / GRID;
+  var css = function (name, fallback) {
+    try { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback; }
+    catch (e) { return fallback; }
+  };
+  var snake, dir, nextDir, food, score, alive;
+
+  function reset() {
+    snake = [{ x: 12, y: 12 }, { x: 11, y: 12 }, { x: 10, y: 12 }];
+    dir = { x: 1, y: 0 }; nextDir = dir; score = 0; alive = true;
+    placeFood(); if (overEl) overEl.hidden = true; updateScore();
+  }
+  function placeFood() {
+    do {
+      food = { x: (Math.random() * GRID) | 0, y: (Math.random() * GRID) | 0 };
+    } while (snake.some(function (s) { return s.x === food.x && s.y === food.y; }));
+  }
+  function updateScore() { if (scoreEl) scoreEl.textContent = 'score ' + score; }
+
+  function step() {
+    if (CP._revealed) return;
+    if (!alive) return;
+    dir = nextDir;
+    var head = { x: (snake[0].x + dir.x + GRID) % GRID, y: (snake[0].y + dir.y + GRID) % GRID };
+    if (snake.some(function (s) { return s.x === head.x && s.y === head.y; })) {
+      alive = false; if (overEl) overEl.hidden = false; draw(); return;
+    }
+    snake.unshift(head);
+    if (head.x === food.x && head.y === food.y) { score++; updateScore(); placeFood(); }
+    else snake.pop();
+    draw();
+  }
+  function draw() {
+    var bg = css('--bg', '#000'), accent = css('--accent', '#52a8ff'), fg = css('--fg', '#ededed'), border = css('--border', '#262626');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.strokeRect(0.5, 0.5, canvas.width - 1, canvas.height - 1);
+    ctx.fillStyle = accent; ctx.fillRect(food.x * CELL + 2, food.y * CELL + 2, CELL - 4, CELL - 4);
+    for (var i = 0; i < snake.length; i++) {
+      ctx.fillStyle = i === 0 ? fg : css('--fg-2', '#a1a1a1');
+      ctx.fillRect(snake[i].x * CELL + 1, snake[i].y * CELL + 1, CELL - 2, CELL - 2);
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (CP._revealed) return;
+    var k = e.key;
+    if (k === 'ArrowUp' && dir.y === 0) nextDir = { x: 0, y: -1 };
+    else if (k === 'ArrowDown' && dir.y === 0) nextDir = { x: 0, y: 1 };
+    else if (k === 'ArrowLeft' && dir.x === 0) nextDir = { x: -1, y: 0 };
+    else if (k === 'ArrowRight' && dir.x === 0) nextDir = { x: 1, y: 0 };
+    else if ((k === ' ' || k === 'Enter') && !alive) reset();
+    else return;
+    e.preventDefault();
+  });
+
+  reset(); draw();
+  CP._snakeTimer = setInterval(step, 110);
 };
 
 /* viewer.js — the logic embedded in every generated wallet file. Prompts for a
@@ -11015,6 +11197,16 @@ CP.unlock = async function () {
 
 CP.initViewer = function () {
   CP.initTheme();
+  // Cover mode: if the file carries a trigger hash, start as a Snake game and
+  // reveal the unlock screen only when the secret word is typed. Otherwise show
+  // the unlock screen directly.
+  if (P.trig) {
+    CP.initSnake(P.trig, CP.revealUnlock);
+  } else {
+    var g = document.getElementById('game'); if (g) g.hidden = true;
+    var b = document.getElementById('brand'); if (b) b.innerHTML = '▌ <b>RECOVER</b>';
+    document.getElementById('vault').hidden = false;
+  }
   document.getElementById('open').addEventListener('click', CP.unlock);
   document.getElementById('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') CP.unlock(); });
   document.getElementById('secretWrap').addEventListener('click', function () {
@@ -11062,6 +11254,12 @@ CP.initEncryptor = function () {
     document.getElementById('duressBody').hidden = !cb.checked;
   });
 
+  document.getElementById('disguiseHead').addEventListener('click', function (e) {
+    var cb = document.getElementById('disguiseOn');
+    if (e.target.id !== 'disguiseOn') cb.checked = !cb.checked;
+    document.getElementById('disguiseBody').hidden = !cb.checked;
+  });
+
   document.getElementById('genPw').addEventListener('click', function () {
     var phrase = CP.generatePassphrase();
     document.getElementById('pw1').value = phrase;
@@ -11097,17 +11295,25 @@ CP.build = async function () {
     if (dpw === p1) { CP.setStatus('Duress password must differ from the main password.', 'err'); return; }
   }
 
+  var disguiseOn = document.getElementById('disguiseOn').checked;
+  var triggerWord = document.getElementById('trigger').value.trim();
+  if (disguiseOn && triggerWord.length < CP.TRIG_MIN) {
+    CP.setStatus('Secret word must be at least ' + CP.TRIG_MIN + ' letters (or turn off the disguise).', 'err'); return;
+  }
+
   btn.disabled = true;
   CP.setStatus('Encrypting with Argon2id (256 MiB, two volumes)… this takes a few seconds.', '');
   try {
     await CP.LIB_READY;
+    var triggerHex = disguiseOn ? await CP.triggerHashHex(triggerWord) : null;
     var payload = await CP.buildPayload({
       realPw: p1,
       realSecret: secret,
       duress: duressOn,
       duressPw: dpw,
       decoyText: decoy,
-      placeholder: 'This vault has no secondary content configured.'
+      placeholder: 'This vault has no secondary content configured.',
+      triggerHex: triggerHex
     });
 
     var html = CP.VIEWER
@@ -11115,10 +11321,11 @@ CP.build = async function () {
       .replace('__PAYLOAD__', function () { return JSON.stringify(payload); });
 
     var fileHash = await CP.sha256hex(CP.te.encode(html));
+    var filename = disguiseOn ? 'snake-game.html' : 'wallet-secret.html';
     var blob = new Blob([html], { type: 'text/html' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'wallet-secret.html';
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
 
@@ -11127,7 +11334,9 @@ CP.build = async function () {
     ['pw1', 'pw2', 'dpw1', 'dpw2'].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ''; });
     CP.updateMeter('', 0);
     CP.setStatus(
-      'Created <b>wallet-secret.html</b>.<br>Whole-file SHA-256 (record this off the machine to detect tampering):' +
+      'Created <b>' + filename + '</b>.' +
+      (disguiseOn ? '<br>It opens as a Snake game; type your secret word to reveal the unlock screen.' : '') +
+      '<br>Whole-file SHA-256 (record this off the machine to detect tampering):' +
       '<br><code>' + fileHash + '</code><br>Test it with every password before deleting the original.',
       'ok', true);
   } catch (e) {

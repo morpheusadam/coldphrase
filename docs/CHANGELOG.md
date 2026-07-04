@@ -3,6 +3,18 @@
 ColdPhrase began as a single hand-written HTML file and was hardened across several iterations
 in response to adversarial review. This log records the security-relevant evolution.
 
+## v6.1.0 — Snake-game cover
+
+- **Disguise mode (optional, on by default).** The wallet file can download as
+  `snake-game.html` and open as a real, playable Snake game. The unlock screen is revealed only
+  when a **user-chosen secret word** is typed (case-insensitive). Only `SHA-256(word)` is stored
+  — not the word — and the detector hashes keystroke suffixes so the word's length isn't leaked
+  either. Hides the file's *purpose* from a casual observer (not steganography — the payload is
+  still in the source; see `docs/DENIABILITY.md`).
+- New module `src/js/snake.js`; builder gains a disguise toggle + secret-word input; crypto core
+  gains `triggerHashHex` / `triggerMatches` (DOM-free, unit-tested). E2E now types the word
+  through the shipped viewer and asserts the reveal.
+
 ## v6.0.0 — modular, published release
 
 **Architecture**

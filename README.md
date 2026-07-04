@@ -40,6 +40,7 @@ attacker who steals it into a memory-hard offline brute-force against a strong p
 | **Duress decoy** | A second password reveals a decoy you choose — for coercion scenarios. |
 | **Trust Wallet UX** | Numbered two-column word grid, smart paste, live BIP39 validation. |
 | **True-random generator** | Built-in EFF diceware passphrase generator (~78 bits, unbiased). |
+| **Snake-game disguise** | Optional cover: the file opens as a **playable Snake game** and reveals the unlock screen only when *your* secret word is typed. |
 | **Tamper detection** | Runtime SHA-256 check of the embedded library + published whole-file hash. |
 | **Network-blocked** | Strict Content-Security-Policy; the viewer reaches no network at all. |
 | **Theme-aware** | Light/dark, driven entirely by a design-token file. |
@@ -99,6 +100,15 @@ A file carries **two volumes** in random order. Your main password opens the *pr
 volume; a duress password (if set) opens a *decoy*. Unlock derives keys for **all** volumes
 so timing never reveals which password you used. Full details:
 **[docs/CRYPTOGRAPHY.md](docs/CRYPTOGRAPHY.md)**, **[docs/DENIABILITY.md](docs/DENIABILITY.md)**.
+
+### Cover mode (Snake-game disguise)
+
+Enable *Disguise output as a Snake game* and the file downloads as `snake-game.html`. Opened,
+it is a real, playable Snake game — no wallet UI in sight. It reveals the password screen only
+when someone **types your chosen secret word** (any casing; caps-lock doesn't matter). Only the
+word's **SHA-256** is stored in the file, not the word itself. This hides the file's *purpose*
+from a casual observer; it is not steganography — see the honest scope in
+**[docs/DENIABILITY.md](docs/DENIABILITY.md)**.
 
 ## What ColdPhrase does *not* protect against
 

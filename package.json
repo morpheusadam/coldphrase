@@ -1,6 +1,6 @@
 {
   "name": "coldphrase",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Offline, single-file cold storage for crypto seed phrases. Argon2id + AES-256-GCM in one self-contained HTML file, with duress decoy and tamper detection.",
   "type": "module",
   "license": "MIT",

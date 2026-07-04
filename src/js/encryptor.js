@@ -25,6 +25,12 @@ CP.initEncryptor = function () {
     document.getElementById('duressBody').hidden = !cb.checked;
   });
 
+  document.getElementById('disguiseHead').addEventListener('click', function (e) {
+    var cb = document.getElementById('disguiseOn');
+    if (e.target.id !== 'disguiseOn') cb.checked = !cb.checked;
+    document.getElementById('disguiseBody').hidden = !cb.checked;
+  });
+
   document.getElementById('genPw').addEventListener('click', function () {
     var phrase = CP.generatePassphrase();
     document.getElementById('pw1').value = phrase;
@@ -60,17 +66,25 @@ CP.build = async function () {
     if (dpw === p1) { CP.setStatus('Duress password must differ from the main password.', 'err'); return; }
   }
 
+  var disguiseOn = document.getElementById('disguiseOn').checked;
+  var triggerWord = document.getElementById('trigger').value.trim();
+  if (disguiseOn && triggerWord.length < CP.TRIG_MIN) {
+    CP.setStatus('Secret word must be at least ' + CP.TRIG_MIN + ' letters (or turn off the disguise).', 'err'); return;
+  }
+
   btn.disabled = true;
   CP.setStatus('Encrypting with Argon2id (256 MiB, two volumes)… this takes a few seconds.', '');
   try {
     await CP.LIB_READY;
+    var triggerHex = disguiseOn ? await CP.triggerHashHex(triggerWord) : null;
     var payload = await CP.buildPayload({
       realPw: p1,
       realSecret: secret,
       duress: duressOn,
       duressPw: dpw,
       decoyText: decoy,
-      placeholder: 'This vault has no secondary content configured.'
+      placeholder: 'This vault has no secondary content configured.',
+      triggerHex: triggerHex
     });
 
     var html = CP.VIEWER
@@ -78,10 +92,11 @@ CP.build = async function () {
       .replace('__PAYLOAD__', function () { return JSON.stringify(payload); });
 
     var fileHash = await CP.sha256hex(CP.te.encode(html));
+    var filename = disguiseOn ? 'snake-game.html' : 'wallet-secret.html';
     var blob = new Blob([html], { type: 'text/html' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'wallet-secret.html';
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
 
@@ -90,7 +105,9 @@ CP.build = async function () {
     ['pw1', 'pw2', 'dpw1', 'dpw2'].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ''; });
     CP.updateMeter('', 0);
     CP.setStatus(
-      'Created <b>wallet-secret.html</b>.<br>Whole-file SHA-256 (record this off the machine to detect tampering):' +
+      'Created <b>' + filename + '</b>.' +
+      (disguiseOn ? '<br>It opens as a Snake game; type your secret word to reveal the unlock screen.' : '') +
+      '<br>Whole-file SHA-256 (record this off the machine to detect tampering):' +
       '<br><code>' + fileHash + '</code><br>Test it with every password before deleting the original.',
       'ok', true);
   } catch (e) {

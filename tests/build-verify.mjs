@@ -76,6 +76,10 @@ const feat = {
   'Trust Wallet word grid': encCode.includes('renderGrid') && encCode.includes('onWordPaste'),
   'masked reveal in viewer': viewerHtml.includes('secretWrap') && vCode.includes('masked'),
   'theme toggle wired': vCode.includes('initTheme') && encCode.includes('initTheme'),
+  'snake cover game present': viewerHtml.includes('id="board"') && viewerHtml.includes('id="vault"') && vCode.includes('initSnake'),
+  'trigger detector in viewer': vCode.includes('triggerMatches') && vCode.includes('_revealed'),
+  'trigger stored as hash only (builder)': encCode.includes('triggerHashHex') && encCode.includes("getElementById('trigger')"),
+  'snake-game download filename': encCode.includes("'snake-game.html'"),
 };
 for (const [k, v] of Object.entries(feat)) { ok(v, 'feature: ' + k); }
 

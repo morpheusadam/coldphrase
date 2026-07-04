@@ -84,5 +84,18 @@ const duressPw = 'hand-this-one-over-42';
      'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
      'BIP39 checksum encoder matches the official zero-entropy vector');
 
+  // ---- cover trigger (Snake disguise) ----
+  const th = await CP.triggerHashHex('Hesam');      // stored hash lowercases the word
+  ok(!/hesam/i.test(th) && th.length === 64, 'trigger: only a SHA-256 hash is produced (word not embedded)');
+  ok(await CP.triggerMatches('hesam', th), 'trigger: exact word matches');
+  ok(await CP.triggerMatches('wasdhesam', th), 'trigger: matches as a suffix while playing');
+  ok(await CP.triggerMatches('HESAM', th), 'trigger: uppercase (caps lock) still matches');
+  ok(!(await CP.triggerMatches('hesa', th)), 'trigger: partial word does not match');
+  ok(!(await CP.triggerMatches('helloworld', th)), 'trigger: unrelated typing does not match');
+  const pt = await CP.buildPayload({ realPw, realSecret, duress: false, placeholder: 'x', triggerHex: th });
+  ok(pt.trig === th, 'trigger: hash is carried in the payload when disguising');
+  const pn = await CP.buildPayload({ realPw, realSecret, duress: false, placeholder: 'x' });
+  ok(!('trig' in pn), 'trigger: no trig field when disguise is off');
+
   console.log(`\nALL ${pass} CRYPTO TESTS PASSED`);
 })().catch(e => { console.error(e); process.exit(1); });

@@ -42,6 +42,24 @@ What v6 guarantees is narrower but real:
   every time).
 - There is **no self-incriminating locked volume** when you did not configure a decoy.
 
+## Cover mode (Snake-game disguise)
+
+A separate, complementary layer hides the file's *purpose* rather than its *contents*. With
+disguise enabled, the file downloads as `snake-game.html` and opens as a fully playable Snake
+game. The unlock screen appears only after someone types a **secret word you choose** (any
+casing). Implementation:
+
+- Only `SHA-256(lowercased word)` is stored — the word is never written into the file.
+- The detector hashes recent keystroke suffixes of several lengths, so neither the word nor its
+  length is revealed by the stored hash.
+- Movement uses arrow keys only, so the letters you type for the trigger never disturb play.
+
+**Honest scope.** This defeats a *casual* observer who opens the file and sees a game. It is
+**not** steganography: the encrypted payload (a base64 Argon2 blob and a JSON of salts/ciphertext)
+is still present in the HTML source, so anyone who *reads the source* can tell the file does more
+than play Snake. Treat cover mode as "hide the purpose from a shoulder-surfer or a quick
+glance," layered on top of — never instead of — a strong password and the duress decoy.
+
 ## Operational requirements
 
 Deniability is mostly an *operational* discipline, not a code feature:

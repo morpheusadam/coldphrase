@@ -57,6 +57,16 @@ CP.unlock = async function () {
 
 CP.initViewer = function () {
   CP.initTheme();
+  // Cover mode: if the file carries a trigger hash, start as a Snake game and
+  // reveal the unlock screen only when the secret word is typed. Otherwise show
+  // the unlock screen directly.
+  if (P.trig) {
+    CP.initSnake(P.trig, CP.revealUnlock);
+  } else {
+    var g = document.getElementById('game'); if (g) g.hidden = true;
+    var b = document.getElementById('brand'); if (b) b.innerHTML = '▌ <b>RECOVER</b>';
+    document.getElementById('vault').hidden = false;
+  }
   document.getElementById('open').addEventListener('click', CP.unlock);
   document.getElementById('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') CP.unlock(); });
   document.getElementById('secretWrap').addEventListener('click', function () {

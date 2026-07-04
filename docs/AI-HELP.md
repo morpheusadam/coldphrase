@@ -16,6 +16,7 @@ viewer. Build with `node build/build.mjs`; test with `npm test`.
 | `src/js/crypto.js` | both | KDF, HKDF, GCM, AAD, volumes, shuffle, BIP39 encode. **DOM-free.** | crypto changes (update tests + bump AAD version) |
 | `src/js/lib-loader.js` | both | SHA-256-verify then `eval` the Argon2 lib | integrity logic |
 | `src/js/theme.js` | both | light/dark toggle | UI |
+| `src/js/snake.js` | viewer | Snake-game cover + secret-word trigger → reveal unlock | cover/disguise |
 | `src/js/wordlist.js` | builder | Trust Wallet word grid, paste, validation | phrase-entry UX |
 | `src/js/passphrase.js` | builder | EFF diceware generator (unbiased) | generator |
 | `src/js/strength.js` | builder | conservative meter (heuristic) | meter tuning |

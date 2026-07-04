@@ -1,41 +1,49 @@
 <!doctype html>
-<!--
-  ColdPhrase — wallet file (viewer). Self-contained and offline.
-  CSP note (viewer): this page never downloads, so it uses a fully-closed
-  default-src 'none' allowlist — no network of any kind is reachable.
--->
+<!-- Snake — a small offline browser game. -->
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<title>Encrypted Vault</title>
+<title>Snake</title>
 <style>__STYLE__</style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
-    <span class="brand">▌ <b>COLDPHRASE</b> · vault</span>
+    <span class="brand" id="brand">▌ <b>SNAKE</b></span>
     <button type="button" class="btn btn-ghost" id="themeToggle">[ light ]</button>
   </div>
 
-  <div class="card">
-    <h1>Encrypted vault</h1>
-    <p class="sub">Argon2id (256 MiB, 4 passes) + HKDF-SHA512 + AES-256-GCM with authenticated parameters. Decryption runs fully offline, in memory only; the network is blocked by CSP and nothing is written to disk.</p>
-    <label>Password</label>
-    <input type="password" id="pw" class="pwd" autofocus autocomplete="off">
-    <button id="open" class="btn btn-primary">Unlock</button>
-    <div id="status" class="status"></div>
-    <div id="secretWrap" hidden>
-      <div class="content">
-        <div class="grid" id="outGrid" hidden></div>
-        <pre id="out" hidden></pre>
-      </div>
-      <div id="revealHint"></div>
+  <!-- cover: a real, playable Snake game -->
+  <div id="game">
+    <div class="card gamecard">
+      <div class="gamehud"><span id="score">score 0</span><span class="hint">arrow keys &middot; space to restart</span></div>
+      <canvas id="board" width="480" height="480"></canvas>
+      <div id="gameover" hidden>game over &mdash; press space</div>
     </div>
-    <div class="actions" id="actions" hidden>
-      <button id="copy" class="btn btn-secondary">Copy</button>
-      <button id="hide" class="btn btn-secondary">Hide</button>
+  </div>
+
+  <!-- revealed only when the secret word is typed -->
+  <div id="vault" hidden>
+    <div class="card">
+      <h1>Recover</h1>
+      <p class="sub">Enter your password. Everything runs offline, in memory only; the network is blocked and nothing is written to disk.</p>
+      <label>Password</label>
+      <input type="password" id="pw" class="pwd" autocomplete="off">
+      <button id="open" class="btn btn-primary">Unlock</button>
+      <div id="status" class="status"></div>
+      <div id="secretWrap" hidden>
+        <div class="content">
+          <div class="grid" id="outGrid" hidden></div>
+          <pre id="out" hidden></pre>
+        </div>
+        <div id="revealHint"></div>
+      </div>
+      <div class="actions" id="actions" hidden>
+        <button id="copy" class="btn btn-secondary">Copy</button>
+        <button id="hide" class="btn btn-secondary">Hide</button>
+      </div>
     </div>
   </div>
 </div>

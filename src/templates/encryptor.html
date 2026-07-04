@@ -61,6 +61,15 @@
       </div>
     </div>
 
+    <div class="duress" id="disguise">
+      <div class="head" id="disguiseHead"><input type="checkbox" id="disguiseOn" checked> <span>🐍 Disguise output as a Snake game</span></div>
+      <div class="body" id="disguiseBody">
+        <p class="sub">The file opens as a playable Snake game. It reveals the unlock screen only after someone types your secret word (any casing). Only its SHA-256 is stored, not the word.</p>
+        <label>Secret word to reveal the unlock screen</label>
+        <input type="text" id="trigger" class="pwd" value="hesam" autocomplete="off" spellcheck="false" style="text-transform:lowercase">
+      </div>
+    </div>
+
     <div class="row-label"><label>Main password</label><button type="button" class="btn btn-ghost" id="genPw">🎲 generate strong</button></div>
     <input type="password" id="pw1" class="pwd" autocomplete="new-password">
     <div id="meter"><div id="meterBar"></div></div>

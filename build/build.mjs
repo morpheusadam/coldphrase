@@ -44,7 +44,7 @@ const bip39 = read('vendor', 'wordlists', 'bip39-english.txt').trim();
 const eff = read('vendor', 'wordlists', 'eff-large.txt').trim();
 
 const js = (name) => read('src', 'js', name);
-const viewerBundle = [js('lib-loader.js'), js('crypto.js'), js('theme.js'), js('viewer.js')].join('\n');
+const viewerBundle = [js('lib-loader.js'), js('crypto.js'), js('theme.js'), js('snake.js'), js('viewer.js')].join('\n');
 const encModules = [js('lib-loader.js'), js('crypto.js'), js('theme.js'),
                     js('wordlist.js'), js('passphrase.js'), js('strength.js'), js('encryptor.js')].join('\n');
 
