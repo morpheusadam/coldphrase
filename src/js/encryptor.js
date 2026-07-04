@@ -32,21 +32,29 @@ CP.initEncryptor = function () {
   });
 
   // Auto-generate a fake decoy: a random VALID BIP39 phrase + a duress password.
+  // The button's own text changes on click, so it is obvious the click registered.
   document.getElementById('genDecoy').addEventListener('click', async function () {
+    var btn = this, orig = btn.textContent;
     var note = document.getElementById('decoyNote');
+    btn.textContent = '⏳ generating…';
     try {
-      note.className = 'status'; note.textContent = 'Generating…';
+      if (window.console) console.log('[ColdPhrase] generate fake: clicked');
       var phrase = await CP.phraseFromEntropy(crypto.getRandomValues(new Uint8Array(16)), CP.BIP39);
       var dp = CP.generatePassphrase();
       document.getElementById('decoy').value = phrase;
       document.getElementById('dpw1').value = dp;
       document.getElementById('dpw2').value = dp;
+      btn.textContent = '✓ done';
       note.className = 'status ok';
       note.innerHTML = 'Decoy password (write it down): <code>' + dp + '</code><br>' +
         'You may replace it with something easier to remember — the decoy is worthless, so its password need not be strong. Note: a generated decoy is an <b>empty</b> wallet; a funded real wallet is more convincing under real coercion.';
+      setTimeout(function () { btn.textContent = orig; }, 2000);
     } catch (e) {
+      btn.textContent = '✗ error';
       note.className = 'status err';
       note.textContent = 'Could not generate: ' + (e && e.message ? e.message : e);
+      if (window.console) console.error('[ColdPhrase] generate fake failed:', e);
+      setTimeout(function () { btn.textContent = orig; }, 3000);
     }
   });
 
